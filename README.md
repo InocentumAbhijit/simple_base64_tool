@@ -1,3 +1,3 @@
-# simple_base64_tool
+# Simple Base64 Tool
 A JS tool to encode and decode Base64 text, image and hash text in SHA1 
 - [have a look](https://inocentumabhijit.github.io/simple_base64_tool/tools.html)
