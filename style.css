@@ -4,14 +4,15 @@
 
 body {
     /*background: rgb(206, 206, 206);*/
-    background: url("bg.jpeg") no-repeat center;
+    background: url("bg-background.png") no-repeat center;
     background-size: 100% 100%;
     font-family: 'Zilla Slab', serif;
     color: yellow;
 }
 
 .heading {
-    color: #401e1e;
+    /* color: #401e1e; */
+    color: #f3f3f3;
 }
 
 h3 {
