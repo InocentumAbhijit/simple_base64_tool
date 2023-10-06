@@ -1,0 +1,130 @@
+* {
+    transition: 0.4s ease;
+}
+
+body {
+    /*background: rgb(206, 206, 206);*/
+    background: url("bg.jpeg") no-repeat center;
+    background-size: 100% 100%;
+    font-family: 'Zilla Slab', serif;
+    color: yellow;
+}
+
+.heading {
+    color: #401e1e;
+}
+
+h3 {
+    margin: 0;
+}
+
+.container {
+    /*background: rgb(13, 11, 22);*/
+    /*opacity: 0.8;*/
+    background: rgba(141, 140, 140, 0.53);
+    /*color: white;*/
+    margin: 20px 20%;
+    padding: 20px 10px;
+    text-align: center;
+    box-shadow: 0 5px 10px gray;
+    border-radius: 5px;
+    /*line-height: 1.5;*/
+    border-left: 7px solid #2456d6;
+    border-right: 7px solid #2456d6;
+    border-top: 1px solid #444444;
+    border-bottom: 1px solid #444444;
+}
+
+input,
+textarea {
+    width: 80%;
+    border: 1px solid #2456d6;
+    border-radius: 5px;
+    /*margin: 10px 0;*/
+    outline: none;
+    padding: 10px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+input[type=file] {
+    margin-bottom: 7px;
+    background: white;
+    color: #2456d6;
+    font-size: medium;
+}
+
+::placeholder {
+    color: #2456d6;
+}
+
+button {
+    display: block;
+    margin: 10px auto 30px;
+    border: none;
+    outline: none;
+    color: white;
+    background-color: #2456d6;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px gray;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: blue;
+}
+
+@media only screen and (max-width: 767px) {
+    button {
+        padding: 7px 10px;
+    }
+}
+
+.result-container {
+    display: none;
+    position: relative;
+    background: rgb(13, 11, 22);
+    color: white;
+    margin: 40px 20%;
+    padding: 50px;
+    text-align: center;
+    box-shadow: 0 5px 20px 5px black;
+    border-radius: 5px;
+}
+
+.result-container h4 {
+    display: none;
+    color: white;
+    margin: 10px 0;
+}
+
+span {
+    display: none;
+    height: 100px;
+    text-align: center;
+    padding: 10%;
+    overflow: hidden scroll;
+    word-break: break-word;
+}
+
+img {
+    display: none;
+    width: 100%;
+    height: auto;
+}
+
+#copy_btn {
+    display: none;
+    margin: 20px auto;
+}
+
+@media (max-width: 600px) {
+
+    .container,
+    .result-container {
+        padding: 15px 5px;
+        margin: 20px 0;
+    }
+}
