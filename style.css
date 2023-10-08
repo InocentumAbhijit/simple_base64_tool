@@ -4,10 +4,10 @@
 
 body {
     /*background: rgb(206, 206, 206);*/
-    background: url("bg-background.png") no-repeat center;
+    background: url("background-img.jpg") no-repeat center;
     background-size: 100% 100%;
     font-family: 'Zilla Slab', serif;
-    color: yellow;
+    color: white;
 }
 
 .heading {
@@ -22,7 +22,7 @@ h3 {
 .container {
     /*background: rgb(13, 11, 22);*/
     /*opacity: 0.8;*/
-    background: rgba(141, 140, 140, 0.53);
+    background: rgb(61 61 61 / 53%);
     /*color: white;*/
     margin: 20px 20%;
     padding: 20px 10px;
@@ -30,8 +30,8 @@ h3 {
     box-shadow: 0 5px 10px gray;
     border-radius: 5px;
     /*line-height: 1.5;*/
-    border-left: 7px solid #2456d6;
-    border-right: 7px solid #2456d6;
+    border-left: 7px solid #2fff63;
+    border-right: 7px solid #2fff63;
     border-top: 1px solid #444444;
     border-bottom: 1px solid #444444;
 }
@@ -65,8 +65,8 @@ button {
     margin: 10px auto 30px;
     border: none;
     outline: none;
-    color: white;
-    background-color: #2456d6;
+    color: #2fff63;
+    background-color: black;
     padding: 10px 20px;
     border-radius: 5px;
     box-shadow: 0 3px 5px gray;
@@ -74,7 +74,8 @@ button {
 }
 
 button:hover {
-    background-color: blue;
+    background-color: #2fff63;
+    color: black;
 }
 
 @media only screen and (max-width: 767px) {
