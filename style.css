@@ -15,6 +15,14 @@ body {
     color: #f3f3f3;
 }
 
+.error {
+    color: red;
+    background-color: black;
+    font-size: 19px;
+    margin-left: 75px;
+    width: 30%;
+}
+
 h3 {
     margin: 0;
 }
