@@ -18,26 +18,35 @@
             <h3>Select a image file (max 1mb):</h3>
         </label>
         <input type="file" id="file" data-max-size="2048" accept="image/x-png,image/jpeg">
+        <p id="imgFileErr" class="error"></p>
         <button onclick="encodeImage()">Encode image</button>
+
         <label for="image">
             <h3>Enter encoded image base64</h3>
         </label>
         <textarea id="image" placeholder="Enter image base64"></textarea>
+        <p id="encodedImgErr" class="error"></p>
         <button onclick="decodeImage()">Decode image</button>
+
         <label for="text">
             <h3>Enter string to encode</h3>
         </label>
         <textarea id="text" placeholder="Enter string"></textarea>
+        <p id="strEncodeErr" class="error"></p>
         <button onclick="encodeString()">Encode string</button>
+
         <label for="text">
             <h3>Enter encoded string to decode</h3>
         </label>
         <textarea id="e_text" placeholder="Enter endoded string"></textarea>
+        <p id="encodedStrErr" class="error"></p>
         <button onclick="decodeString()">Decode string</button>
+
         <label for="text2">
             <h3>Enter string to SHA1 hash</h3>
         </label>
         <textarea id="text2" placeholder="Enter string"></textarea>
+        <p id="SHA1StrErr" class="error"></p>
         <button onclick="hashString()">SHA1 Hash</button>
     </div>
     <div class="result-container" id="result_view">
@@ -55,7 +64,12 @@
 
         function encodeImage() {
             hideAll();
-            let file = document.getElementById('file');
+            let file = document.getElementById('file').value;
+            document.getElementById('imgFileErr').innerHTML = '';
+            if (file === '') {
+                document.getElementById('imgFileErr').innerHTML = 'Image is required';
+                return;
+            }
             let reader = new FileReader();
             if (file.files[0]) {
                 if (file.files[0].size <= 1024 * 1024) {
@@ -72,6 +86,14 @@
         function decodeImage() {
             hideAll();
             let image = document.getElementById('image').value;
+            document.getElementById('encodedImgErr').innerHTML = '';
+            if (image === '') {
+                document.getElementById('encodedImgErr').innerHTML = 'base64 is required';
+                console.log("abcd");
+                return;
+            } else {
+                document.getElementById('encodedImgErr').innerHTML = '';
+            }
             displayImage();
             resultHeader.innerHTML = 'Decoded image:';
             resultImage.src = image;
@@ -79,23 +101,45 @@
 
         function encodeString() {
             hideAll();
-            let text = document.getElementById('text');
+            let text = document.getElementById('text').value;
+            document.getElementById('strEncodeErr').innerHTML = '';
+            if (text === '') {
+                document.getElementById('strEncodeErr').innerHTML = 'String is required';
+                return;
+            } else {
+                document.getElementById('strEncodeErr').innerHTML = '';
+            }
             displayString();
             resultHeader.innerHTML = 'Encoded string:';
             resultBox.innerHTML = btoa(text.value);
         }
 
         function decodeString() {
+            let text = document.getElementById('e_text').value;
+            document.getElementById('encodedStrErr').innerHTML = '';
+            if (text === '') {
+                document.getElementById('encodedStrErr').innerHTML = 'Encoded String is required';
+                return;
+            } else {
+                document.getElementById('encodedStrErr').innerHTML = '';
+            }
             hideAll();
-            let text = document.getElementById('e_text');
             displayString();
             resultHeader.innerHTML = 'Decoded string:';
             resultBox.innerHTML = atob(text.value);
         }
 
         function hashString() {
+            let text = document.getElementById('text2').value;
+            document.getElementById('SHA1StrErr').innerHTML = '';
+            if (text === '') {
+                document.getElementById('SHA1StrErr').innerHTML = 'String is required';
+                console.log("mnm");
+                return;
+            } else {
+                document.getElementById('SHA1StrErr').innerHTML = '';
+            }
             hideAll();
-            let text = document.getElementById('text2');
             displayString();
             resultHeader.innerHTML = 'SHA1 hashed string:';
             resultBox.innerHTML = sha1(text.value);
