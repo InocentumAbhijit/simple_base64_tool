@@ -1,373 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>8bit Base64 and SHA1 tool</title>
-	<style>
-		* {
-			transition: 0.4s ease;
-		}
-		body {
-			background: rgb(206, 206, 206);
-		}
-		.container {
-			background: rgb(13, 11, 22);
-			color: white;
-			margin: 20px 20%;
-			padding: 20px 50px;
-			text-align: center;
-			box-shadow: 0 5px 20px 5px black;
-			border-radius: 5px;
-			line-height: 1.5;
-		}
-		input, textarea {
-			width: 80%;
-			border: 1px solid red;
-			border-radius: 5px
-		}
-		input[type=file]{
-			margin-bottom: 7px;
-		}
-		button {
-			border: none;
-			outline: none;
-			color: white;
-			background-color: rgb(182, 2, 236);
-			padding: 10px 20px;
-			border-radius: 5px;
-			box-shadow: 0 2px 10px 2px red;
-		}
-		button:hover {
-			background-color: blue;
-		}
-		.result-container {
-			display: none;
-			position: relative;
-			background: rgb(13, 11, 22);
-			color: white;
-			margin: 40px 20%;
-			padding: 50px;
-			text-align: center;
-			box-shadow: 0 5px 20px 5px black;
-			border-radius: 5px;
-		}
-		.result-container h4 {
-			display: none;
-			color: white;
-			margin: 10px 0;
-		}
-		span {
-			display: none;
-			height: 100px;
-			text-align: center;
-			padding: 10%;
-			overflow: hidden scroll;
-			word-break: break-word;
-		}
-		img {
-			display: none;
-			width: 100%;
-			height: auto;
-		}
-		#copy_btn {
-			display: none;
-			margin: 0 auto;
-		}
-		@media (max-width: 600px) {
-			.container, .result-container {
-				padding: 15px 5px;
-				margin: 20px 0;
-			}
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>8bit Base64 and SHA1 tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-	<div class="container" id="main_container">
-		<h1>8 Bit Base64 & SHA1 Tool for Images & Strings</h1>
-		<label for="file">Select a image file (max 1mb):</label>
-		<br/>
-		<input type="file" id="file" data-max-size="2048" accept="image/x-png,image/jpeg">
-		<br/>
-		<button onclick="encodeImage()">Encode image</button>
-		<br/>
-		<hr/>
-		<label for="image">Enter encoded image base64</label>
-		<br/>
-		<textarea id="image" placeholder="Enter image base64"></textarea>
-		<br/>
-		<button onclick="decodeImage()">Decode image</button>
-		<br/>
-		<hr/>
-		<label for="text">Enter string to encode</label>
-		<br/>
-		<textarea id="text" placeholder="Enter string"></textarea>
-		<br/>
-		<button onclick="encodeString()">Encode string</button>
-		<br/>
-		<hr/>
-		<label for="text">Enter encoded string to decode</label>
-		<br />
-		<textarea id="e_text" placeholder="Enter endoded string"></textarea>
-		<br/>
-		<button onclick="decodeString()">Decode string</button>
-		<br />
-		<hr />
-		<label for="text2">Enter string to SHA1 hash</label>
-		<br />
-		<textarea id="text2" placeholder="Enter string"></textarea>
-		<br />
-		<button onclick="hashString()">SHA1 Hash</button>
-	</div>
-	<div class="result-container" id="result_view">
-		<h4 id="result_header"></h4>
-		<span id="result_box"></span>
-		<img id="result_image">
-		<br/>
-		<button onclick="copyToClipboard()" id="copy_btn">Copy</button>
-	</div>
-<script>
-	const resultView = document.getElementById('result_view');
-	const resultHeader = document.getElementById('result_header');
-	const resultBox = document.getElementById('result_box');
-	const resultImage = document.getElementById('result_image');
-	const copyBtn = document.getElementById('copy_btn');
+    <div class="container" id="main_container">
+        <h1 class="heading">8 Bit Base64 & SHA1 Tool for Images & Strings</h1>
+        <hr>
+        <label for="file">
+            <h3>Select a image file (max 1mb):</h3>
+        </label>
+        <input type="file" id="file" data-max-size="2048" accept="image/x-png,image/jpeg">
+        <p id="imgFileErr" class="error"></p>
+        <button onclick="encodeImage()">Encode image</button>
 
-	function encodeImage(){
-		hideAll();
-		let file = document.getElementById('file');
-		let reader = new FileReader();
-		if(file.files[0]){
-			if(file.files[0].size <= 1024*1024){
-				reader.readAsDataURL(file.files[0]);
-				reader.onload = function () {
-					displayString();
-					resultHeader.innerHTML = 'Encoded image:';
-					resultBox.innerHTML = reader.result.toString();
-				};
-			}else alert('File size too big');
-		}
-	}
-	function decodeImage(){
-		hideAll();
-		let image = document.getElementById('image').value;
-		displayImage();
-		resultHeader.innerHTML = 'Decoded image:';
-		resultImage.src = image;
-	}
-	function encodeString(){
-		hideAll();
-		let text = document.getElementById('text');
-		displayString();
-		resultHeader.innerHTML = 'Encoded string:';
-		resultBox.innerHTML = btoa(text.value);
-	}
-	function decodeString(){
-		hideAll();
-		let text = document.getElementById('e_text');
-		displayString();
-		resultHeader.innerHTML = 'Decoded string:';
-		resultBox.innerHTML = atob(text.value);
-	}
+        <label for="image">
+            <h3>Enter encoded image base64</h3>
+        </label>
+        <textarea id="image" placeholder="Enter image base64"></textarea>
+        <p id="encodedImgErr" class="error"></p>
+        <button onclick="decodeImage()">Decode image</button>
 
-	function hashString() {
-		hideAll();
-		let text = document.getElementById('text2');
-		displayString();
-		resultHeader.innerHTML = 'SHA1 hashed string:';
-		resultBox.innerHTML = sha1(text.value);
-	}
+        <label for="text">
+            <h3>Enter string to encode</h3>
+        </label>
+        <textarea id="text" placeholder="Enter string"></textarea>
+        <p id="strEncodeErr" class="error"></p>
+        <button onclick="encodeString()">Encode string</button>
 
-	function displayString(){
-		resultView.style.display = 'block';
-		resultHeader.style.display = 'block';
-		resultBox.style.display = 'block';
-		copyBtn.style.display = 'block';
-		resultView.scrollIntoView({behavior: "smooth", block: "end"});
-	}
+        <label for="text">
+            <h3>Enter encoded string to decode</h3>
+        </label>
+        <textarea id="e_text" placeholder="Enter endoded string"></textarea>
+        <p id="encodedStrErr" class="error"></p>
+        <button onclick="decodeString()">Decode string</button>
 
-	function displayImage(){
-		resultView.style.display = 'block';
-		resultHeader.style.display = 'block';
-		resultImage.style.display = 'block';
-		resultView.scrollIntoView({behavior: "smooth", block: "end"});
-	}
+        <label for="text2">
+            <h3>Enter string to SHA1 hash</h3>
+        </label>
+        <textarea id="text2" placeholder="Enter string"></textarea>
+        <p id="SHA1StrErr" class="error"></p>
+        <button onclick="hashString()">SHA1 Hash</button>
+    </div>
+    <div class="result-container" id="result_view">
+        <h3 id="result_header"></h3>
+        <span id="result_box"></span>
+        <img id="result_image">
+        <button onclick="copyToClipboard()" id="copy_btn">Copy</button>
+    </div>
+    <script>
+        const resultView = document.getElementById('result_view');
+        const resultHeader = document.getElementById('result_header');
+        const resultBox = document.getElementById('result_box');
+        const resultImage = document.getElementById('result_image');
+        const copyBtn = document.getElementById('copy_btn');
 
-	function hideAll(){
-		resultHeader.style.removeProperty('display');
-		resultBox.style.removeProperty('display');
-		resultImage.style.removeProperty('display');
-		resultView.style.removeProperty('display');
-		copyBtn.style.removeProperty('display');
-	}
+        function encodeImage() {
+            hideAll();
+            let file = document.getElementById('file').value;
+            document.getElementById('imgFileErr').innerHTML = '';
+            if (file === '') {
+                document.getElementById('imgFileErr').innerHTML = 'Image is required';
+                return;
+            }
+            let reader = new FileReader();
+            if (file.files[0]) {
+                if (file.files[0].size <= 1024 * 1024) {
+                    reader.readAsDataURL(file.files[0]);
+                    reader.onload = function () {
+                        displayString();
+                        resultHeader.innerHTML = 'Encoded image:';
+                        resultBox.innerHTML = reader.result.toString();
+                    };
+                } else alert('File size too big');
+            }
+        }
 
-	function copyToClipboard(){
-		let tempInput = document.createElement('textarea');
-		tempInput.value = resultBox.innerHTML;
-		document.body.appendChild(tempInput);
-		tempInput.select();
-		tempInput.setSelectionRange(0, 99999999); /*For mobile devices*/
-		document.execCommand("copy");
-		tempInput.remove();
-		alert("Text copied to clipboard");
-	
-	}
+        function decodeImage() {
+            hideAll();
+            let image = document.getElementById('image').value;
+            document.getElementById('encodedImgErr').innerHTML = '';
+            if (image === '') {
+                document.getElementById('encodedImgErr').innerHTML = 'base64 is required';
+                console.log("abcd");
+                return;
+            } else {
+                document.getElementById('encodedImgErr').innerHTML = '';
+            }
+            displayImage();
+            resultHeader.innerHTML = 'Decoded image:';
+            resultImage.src = image;
+        }
 
-	function sha1(str) {
-		//  discuss at: https://locutus.io/php/sha1/
-		// original by: Webtoolkit.info (https://www.webtoolkit.info/)
-		// improved by: Michael White (https://getsprink.com)
-		// improved by: Kevin van Zonneveld (https://kvz.io)
-		//    input by: Brett Zamir (https://brett-zamir.me)
-		//      note 1: Keep in mind that in accordance with PHP, the whole string is buffered and then
-		//      note 1: hashed. If available, we'd recommend using Node's native crypto modules directly
-		//      note 1: in a steaming fashion for faster and more efficient hashing
-		//   example 1: sha1('Kevin van Zonneveld')
-		//   returns 1: '54916d2e62f65b3afa6e192e6a601cdbe5cb5897'
+        function encodeString() {
+            hideAll();
+            let text = document.getElementById('text').value;
+            document.getElementById('strEncodeErr').innerHTML = '';
+            if (text === '') {
+                document.getElementById('strEncodeErr').innerHTML = 'String is required';
+                return;
+            } else {
+                document.getElementById('strEncodeErr').innerHTML = '';
+            }
+            displayString();
+            resultHeader.innerHTML = 'Encoded string:';
+            resultBox.innerHTML = btoa(text.value);
+        }
 
-		var hash
-		try {
-			var crypto = require('crypto')
-			var sha1sum = crypto.createHash('sha1')
-			sha1sum.update(str)
-			hash = sha1sum.digest('hex')
-		} catch (e) {
-			hash = undefined
-		}
+        function decodeString() {
+            let text = document.getElementById('e_text').value;
+            document.getElementById('encodedStrErr').innerHTML = '';
+            if (text === '') {
+                document.getElementById('encodedStrErr').innerHTML = 'Encoded String is required';
+                return;
+            } else {
+                document.getElementById('encodedStrErr').innerHTML = '';
+            }
+            hideAll();
+            displayString();
+            resultHeader.innerHTML = 'Decoded string:';
+            resultBox.innerHTML = atob(text.value);
+        }
 
-		if (hash !== undefined) {
-			return hash
-		}
+        function hashString() {
+            let text = document.getElementById('text2').value;
+            document.getElementById('SHA1StrErr').innerHTML = '';
+            if (text === '') {
+                document.getElementById('SHA1StrErr').innerHTML = 'String is required';
+                console.log("mnm");
+                return;
+            } else {
+                document.getElementById('SHA1StrErr').innerHTML = '';
+            }
+            hideAll();
+            displayString();
+            resultHeader.innerHTML = 'SHA1 hashed string:';
+            resultBox.innerHTML = sha1(text.value);
+        }
 
-		var _rotLeft = function (n, s) {
-			var t4 = (n << s) | (n >>> (32 - s))
-			return t4
-		}
+        function displayString() {
+            resultView.style.display = 'block';
+            resultHeader.style.display = 'block';
+            resultBox.style.display = 'block';
+            copyBtn.style.display = 'block';
+            resultView.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
 
-		var _cvtHex = function (val) {
-			var str = ''
-			var i
-			var v
+        function displayImage() {
+            resultView.style.display = 'block';
+            resultHeader.style.display = 'block';
+            resultImage.style.display = 'block';
+            resultView.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
 
-			for (i = 7; i >= 0; i--) {
-				v = (val >>> (i * 4)) & 0x0f
-				str += v.toString(16)
-			}
-			return str
-		}
+        function hideAll() {
+            resultHeader.style.removeProperty('display');
+            resultBox.style.removeProperty('display');
+            resultImage.style.removeProperty('display');
+            resultView.style.removeProperty('display');
+            copyBtn.style.removeProperty('display');
+        }
 
-		var blockstart
-		var i, j
-		var W = new Array(80)
-		var H0 = 0x67452301
-		var H1 = 0xEFCDAB89
-		var H2 = 0x98BADCFE
-		var H3 = 0x10325476
-		var H4 = 0xC3D2E1F0
-		var A, B, C, D, E
-		var temp
+        function copyToClipboard() {
+            let tempInput = document.createElement('textarea');
+            tempInput.value = resultBox.innerHTML;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999999); /*For mobile devices*/
+            document.execCommand("copy");
+            tempInput.remove();
+            alert("Text copied to clipboard");
 
-		// utf8_encode
-		str = unescape(encodeURIComponent(str))
-		var strLen = str.length
+        }
 
-		var wordArray = []
-		for (i = 0; i < strLen - 3; i += 4) {
-			j = str.charCodeAt(i) << 24 |
-				str.charCodeAt(i + 1) << 16 |
-				str.charCodeAt(i + 2) << 8 |
-				str.charCodeAt(i + 3)
-			wordArray.push(j)
-		}
+        function sha1(str) {
+            //  discuss at: https://locutus.io/php/sha1/
+            // original by: Webtoolkit.info (https://www.webtoolkit.info/)
+            // improved by: Michael White (https://getsprink.com)
+            // improved by: Kevin van Zonneveld (https://kvz.io)
+            //    input by: Brett Zamir (https://brett-zamir.me)
+            //      note 1: Keep in mind that in accordance with PHP, the whole string is buffered and then
+            //      note 1: hashed. If available, we'd recommend using Node's native crypto modules directly
+            //      note 1: in a steaming fashion for faster and more efficient hashing
+            //   example 1: sha1('Kevin van Zonneveld')
+            //   returns 1: '54916d2e62f65b3afa6e192e6a601cdbe5cb5897'
 
-		switch (strLen % 4) {
-			case 0:
-				i = 0x080000000
-				break
-			case 1:
-				i = str.charCodeAt(strLen - 1) << 24 | 0x0800000
-				break
-			case 2:
-				i = str.charCodeAt(strLen - 2) << 24 | str.charCodeAt(strLen - 1) << 16 | 0x08000
-				break
-			case 3:
-				i = str.charCodeAt(strLen - 3) << 24 |
-					str.charCodeAt(strLen - 2) << 16 |
-					str.charCodeAt(strLen - 1) <<
-					8 | 0x80
-				break
-		}
+            var hash
+            try {
+                var crypto = require('crypto')
+                var sha1sum = crypto.createHash('sha1')
+                sha1sum.update(str)
+                hash = sha1sum.digest('hex')
+            } catch (e) {
+                hash = undefined
+            }
 
-		wordArray.push(i)
+            if (hash !== undefined) {
+                return hash
+            }
 
-		while ((wordArray.length % 16) !== 14) {
-			wordArray.push(0)
-		}
+            var _rotLeft = function (n, s) {
+                var t4 = (n << s) | (n >>> (32 - s))
+                return t4
+            }
 
-		wordArray.push(strLen >>> 29)
-		wordArray.push((strLen << 3) & 0x0ffffffff)
+            var _cvtHex = function (val) {
+                var str = ''
+                var i
+                var v
 
-		for (blockstart = 0; blockstart < wordArray.length; blockstart += 16) {
-			for (i = 0; i < 16; i++) {
-				W[i] = wordArray[blockstart + i]
-			}
-			for (i = 16; i <= 79; i++) {
-				W[i] = _rotLeft(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1)
-			}
+                for (i = 7; i >= 0; i--) {
+                    v = (val >>> (i * 4)) & 0x0f
+                    str += v.toString(16)
+                }
+                return str
+            }
 
-			A = H0
-			B = H1
-			C = H2
-			D = H3
-			E = H4
+            var blockstart
+            var i, j
+            var W = new Array(80)
+            var H0 = 0x67452301
+            var H1 = 0xEFCDAB89
+            var H2 = 0x98BADCFE
+            var H3 = 0x10325476
+            var H4 = 0xC3D2E1F0
+            var A, B, C, D, E
+            var temp
 
-			for (i = 0; i <= 19; i++) {
-				temp = (_rotLeft(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff
-				E = D
-				D = C
-				C = _rotLeft(B, 30)
-				B = A
-				A = temp
-			}
+            // utf8_encode
+            str = unescape(encodeURIComponent(str))
+            var strLen = str.length
 
-			for (i = 20; i <= 39; i++) {
-				temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff
-				E = D
-				D = C
-				C = _rotLeft(B, 30)
-				B = A
-				A = temp
-			}
+            var wordArray = []
+            for (i = 0; i < strLen - 3; i += 4) {
+                j = str.charCodeAt(i) << 24 |
+                    str.charCodeAt(i + 1) << 16 |
+                    str.charCodeAt(i + 2) << 8 |
+                    str.charCodeAt(i + 3)
+                wordArray.push(j)
+            }
 
-			for (i = 40; i <= 59; i++) {
-				temp = (_rotLeft(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff
-				E = D
-				D = C
-				C = _rotLeft(B, 30)
-				B = A
-				A = temp
-			}
+            switch (strLen % 4) {
+                case 0:
+                    i = 0x080000000
+                    break
+                case 1:
+                    i = str.charCodeAt(strLen - 1) << 24 | 0x0800000
+                    break
+                case 2:
+                    i = str.charCodeAt(strLen - 2) << 24 | str.charCodeAt(strLen - 1) << 16 | 0x08000
+                    break
+                case 3:
+                    i = str.charCodeAt(strLen - 3) << 24 |
+                        str.charCodeAt(strLen - 2) << 16 |
+                        str.charCodeAt(strLen - 1) <<
+                        8 | 0x80
+                    break
+            }
 
-			for (i = 60; i <= 79; i++) {
-				temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff
-				E = D
-				D = C
-				C = _rotLeft(B, 30)
-				B = A
-				A = temp
-			}
+            wordArray.push(i)
 
-			H0 = (H0 + A) & 0x0ffffffff
-			H1 = (H1 + B) & 0x0ffffffff
-			H2 = (H2 + C) & 0x0ffffffff
-			H3 = (H3 + D) & 0x0ffffffff
-			H4 = (H4 + E) & 0x0ffffffff
-		}
+            while ((wordArray.length % 16) !== 14) {
+                wordArray.push(0)
+            }
 
-		temp = _cvtHex(H0) + _cvtHex(H1) + _cvtHex(H2) + _cvtHex(H3) + _cvtHex(H4)
-		return temp.toLowerCase()
-	}
-</script>
+            wordArray.push(strLen >>> 29)
+            wordArray.push((strLen << 3) & 0x0ffffffff)
+
+            for (blockstart = 0; blockstart < wordArray.length; blockstart += 16) {
+                for (i = 0; i < 16; i++) {
+                    W[i] = wordArray[blockstart + i]
+                }
+                for (i = 16; i <= 79; i++) {
+                    W[i] = _rotLeft(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1)
+                }
+
+                A = H0
+                B = H1
+                C = H2
+                D = H3
+                E = H4
+
+                for (i = 0; i <= 19; i++) {
+                    temp = (_rotLeft(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff
+                    E = D
+                    D = C
+                    C = _rotLeft(B, 30)
+                    B = A
+                    A = temp
+                }
+
+                for (i = 20; i <= 39; i++) {
+                    temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff
+                    E = D
+                    D = C
+                    C = _rotLeft(B, 30)
+                    B = A
+                    A = temp
+                }
+
+                for (i = 40; i <= 59; i++) {
+                    temp = (_rotLeft(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff
+                    E = D
+                    D = C
+                    C = _rotLeft(B, 30)
+                    B = A
+                    A = temp
+                }
+
+                for (i = 60; i <= 79; i++) {
+                    temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff
+                    E = D
+                    D = C
+                    C = _rotLeft(B, 30)
+                    B = A
+                    A = temp
+                }
+
+                H0 = (H0 + A) & 0x0ffffffff
+                H1 = (H1 + B) & 0x0ffffffff
+                H2 = (H2 + C) & 0x0ffffffff
+                H3 = (H3 + D) & 0x0ffffffff
+                H4 = (H4 + E) & 0x0ffffffff
+            }
+
+            temp = _cvtHex(H0) + _cvtHex(H1) + _cvtHex(H2) + _cvtHex(H3) + _cvtHex(H4)
+            return temp.toLowerCase()
+        }
+    </script>
 </body>
+
 </html>
